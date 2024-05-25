@@ -1,7 +1,7 @@
 package com.example.vehiclehealthmonetiring
 
-import com.android.volley.Request.Method
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -14,12 +14,12 @@ import com.android.volley.toolbox.Volley
 import org.json.JSONException
 import org.json.JSONObject
 
-class MainActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
     val Api_url: String = "https://vehicle-app-api.onrender.com/register"
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_register)
 
         val ownerName = findViewById<EditText>(R.id.ownerName)
         val vehicleNumber = findViewById<EditText>(R.id.VehicleNumber)
@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         val carBrand = findViewById<EditText>(R.id.carBrand)
         val dateOfPurchase = findViewById<EditText>(R.id.dateOfPurchase)
         val btnRegister = findViewById<Button>(R.id.register)
+        val btnStatus = findViewById<Button>(R.id.status)
 
         btnRegister.setOnClickListener {
             val owner: String = ownerName.text.toString()
@@ -62,6 +63,10 @@ class MainActivity : AppCompatActivity() {
 
             requestQue.add(requst)
 
+        }
+
+        btnStatus.setOnClickListener {
+            startActivity(Intent(this, StatusActivity2::class.java))
         }
     }
 }
