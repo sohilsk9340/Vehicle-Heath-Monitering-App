@@ -1,6 +1,7 @@
 package com.example.vehiclehealthmonetiring
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -13,6 +14,10 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit.Callback
+import retrofit.GsonConverterFactory
+import retrofit.Response
+import retrofit.Retrofit
 
 class StatusActivity2 : AppCompatActivity() {
     val url: String = "https://vehicle-app-api.onrender.com/status"
@@ -25,12 +30,11 @@ class StatusActivity2 : AppCompatActivity() {
         val text3 = findViewById<TextView>(R.id.text3)
         val text4 = findViewById<TextView>(R.id.text4)
 
-
-
+        /*
         val requestQueue: RequestQueue = Volley.newRequestQueue(this)
 
         val status = JsonObjectRequest(
-            Request.Method.POST,
+            Request.Method.GET,
             url,
             null,
             { response ->
@@ -45,12 +49,14 @@ class StatusActivity2 : AppCompatActivity() {
                    text3.text = expirePollution
                    text3.text = accident
 
+                   Toast.makeText(this,"Status Recived Succesfully",Toast.LENGTH_SHORT).show()
+
                }catch (e: Exception){
                    e.printStackTrace()
                }
             },
             { error ->
-                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Error: " + error.message, Toast.LENGTH_SHORT).show()
             }
         )
         requestQueue.add(status)
@@ -58,5 +64,34 @@ class StatusActivity2 : AppCompatActivity() {
 //        val engineHealth = text2.text.toString()
 //        val expirePollution = text3.text.toString()
 //        val accident = text4.text.toString()
+        */
+
+        val retrofitBuilder = Retrofit.Builder()
+            .baseUrl("https://vehicle-app-api.onrender.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiInterface::class.java)
+
+        val retrofitData = retrofitBuilder.getStatus()
+
+        retrofitData.enqueue(object : Callback<StatusData?> {
+            override fun onResponse(response: Response<StatusData?>?, retrofit: Retrofit?) {
+                val responseBody = response?.body()
+                val vehicleStatus = responseBody?.vehicleStatus.toString()
+                val engineHealth = responseBody?.engineHealth.toString()
+                val expirePollution = responseBody?.expirePollution.toString()
+                val accident = responseBody?.accident.toString()
+
+                text1.text = vehicleStatus
+                text2.text = engineHealth
+                text3.text = expirePollution
+                text4.text = accident
+
+            }
+
+            override fun onFailure(t: Throwable?) {
+                Log.d("StatusActivity2", "onFailure: " + t?.message )
+            }
+        })
     }
 }
