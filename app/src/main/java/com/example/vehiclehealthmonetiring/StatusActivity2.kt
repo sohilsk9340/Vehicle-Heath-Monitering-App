@@ -1,5 +1,6 @@
 package com.example.vehiclehealthmonetiring
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
@@ -75,6 +76,7 @@ class StatusActivity2 : AppCompatActivity() {
         val retrofitData = retrofitBuilder.getStatus()
 
         retrofitData.enqueue(object : Callback<StatusData?> {
+            @SuppressLint("SetTextI18n")
             override fun onResponse(response: Response<StatusData?>?, retrofit: Retrofit?) {
                 val responseBody = response?.body()
                 val vehicleStatus = responseBody?.vehicleStatus.toString()
@@ -82,11 +84,12 @@ class StatusActivity2 : AppCompatActivity() {
                 val expirePollution = responseBody?.expirePollution.toString()
                 val accident = responseBody?.accident.toString()
 
-                text1.text = vehicleStatus
-                text2.text = engineHealth
-                text3.text = expirePollution
-                text4.text = accident
+                text1.text = "Vehicle Status: $vehicleStatus"
+                text2.text = "Engine Health: $engineHealth"
+                text3.text = "Expire Pollution: $expirePollution"
+                text4.text = "Accident: $accident"
 
+                Toast.makeText(this@StatusActivity2, "Status Received Successfully", Toast.LENGTH_SHORT).show()
             }
 
             override fun onFailure(t: Throwable?) {

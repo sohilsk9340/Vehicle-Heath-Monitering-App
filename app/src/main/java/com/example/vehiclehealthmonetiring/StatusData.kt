@@ -6,3 +6,5 @@ data class StatusData(
     val expirePollution: String,
     val accident: String
 )
+
+
